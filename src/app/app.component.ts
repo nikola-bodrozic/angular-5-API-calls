@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     if(this.client_id == "" && this.client_secret == "") {
-      this.msg = "place API credentials in requests.component.ts";
+      this.msg = "place API credentials in app.component.ts in lines 18 & 19";
       return false;
     }
   }
