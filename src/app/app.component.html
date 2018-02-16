@@ -1,0 +1,10 @@
+<h1>{{ msg }}</h1>
+<p> click on first button to get bearer token and then click on second button to get data from Lufthansa API</p>
+  <button (click)="sendHeaderPOST()">get token by POST</button> Token:{{ token }}<br><br>
+  latitude<input type="text" #lat name="lat" placeholder="latitude" value="51.5"><br><br>
+  longitude<input type="text" #lang name="lang" placeholder="longitude" value="-0.142"><br><br>
+  <button (click)="sendHeaderGET(lat.value, lang.value)">Show airports by GET</button> <br><br>
+  <div *ngFor="let ap of airports">Name:{{ ap.Names.Name.$ }} - Code:{{ ap.AirportCode }}</div>
+  <hr> 
+  <button (click)="sendCustomHeaderGET()">send custom header by Get</button>
+  

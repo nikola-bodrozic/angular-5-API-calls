@@ -3,33 +3,27 @@ import { Headers, RequestOptions, Http } from '@angular/http';
 
 @Component({
   selector: 'nb-root',
-  template: `
-  <h1>{{ msg }}</h1>
-  <p> click on first button to get bearer token and then click on second button to get data from Lufthansa API</p>
-  <button (click)="sendHeaderPOST()">send header by POST</button>  
-  <button (click)="sendHeaderGET()">send header by Get</button>  
-  <button (click)="sendCustomHeaderGET()">send custom header by Get</button>
-  `,
+  templateUrl:'app.component.html',
   styles: []
 })
 
-export class AppComponent implements OnInit {
-  
+export class AppComponent  implements OnInit {
   client_id:string = "";
   client_secret:string = "";
   grant_type:string = "client_credentials";
   token:any;
   msg:string;
-
+  airports:any[];
+  
   constructor(private http:Http) { }
-
+  
   ngOnInit() {
     if(this.client_id == "" && this.client_secret == "") {
       this.msg = "place API credentials in app.component.ts in lines 18 & 19";
       return false;
     }
   }
-
+  
   // POST data as form with application/x-www-form-urlencoded
   sendHeaderPOST() {
     let creds = `client_id=${this.client_id}&client_secret=${this.client_secret}&grant_type=${this.grant_type}`;
@@ -42,16 +36,17 @@ export class AppComponent implements OnInit {
       console.log(this.token); 
     });   
   }
-
+  
   // GET data with header using bearer token
-  sendHeaderGET(){
+  sendHeaderGET(lat:string, lang:string){
+    let api_url =`https://api.lufthansa.com/v1/references/airports/nearest/${lat},${lang}?lang=en`;
     let head = new Headers();
     head.append("Authorization", "Bearer " + this.token);
     let opt = new RequestOptions({headers:head});
     this.http
-    .get('https://api.lufthansa.com/v1/references/countries/DK?limit=20&offset=0', opt)
+    .get(api_url, opt)
     .subscribe( response => { 
-      console.log( response.json().CountryResource.Countries.Country.ZoneCode ); 
+      this.airports = response.json().NearestAirportResource.Airports.Airport
     });   
   }  
 
